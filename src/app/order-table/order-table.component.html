@@ -1,0 +1,83 @@
+<div class="header-container">
+  <div class="header-left">
+    <h2 class="title">Latest Orders</h2>
+    <span class="total">{{ totalOrders }} total</span>
+  </div>
+  <div class="header-right">
+    
+<div class="columns-toggle">
+  <mat-checkbox [(ngModel)]="showExtraColumns" (change)="toggleExtraColumns()">
+    Extra columns
+  </mat-checkbox>
+</div>  
+    
+    <button class="new-entry-btn" (click)="addNewOrder()">NEW ENTRY</button>
+  </div>
+</div>
+
+<div class="table-container">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Order ID </th>
+      <td mat-cell *matCellDef="let order"> {{ order.id }} </td>
+    </ng-container>
+    <ng-container matColumnDef="customer">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer </th>
+      <td mat-cell *matCellDef="let order"> {{ order.first_name }} {{ order.last_name }} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+      <td mat-cell *matCellDef="let order"> {{ order.data }} </td>
+    </ng-container>
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+      <td mat-cell *matCellDef="let order">
+      <span class="status-indicator" [ngClass]="'status-' + order.status.toLowerCase()"></span>
+        {{ order.status }}
+      </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+      <td mat-cell *matCellDef="let order"> {{ order.email }} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="address">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Address </th>
+      <td mat-cell *matCellDef="let order"> {{ order.address }} </td>
+    </ng-container>
+  
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Actions </th>
+        <td mat-cell *matCellDef="let order" class="action-buttons">
+      <button mat-icon-button disabled>
+      <mat-icon>more_vert</mat-icon>
+      </button>
+      <button mat-icon-button 
+            (click)="editOrder($event, order)"
+            [disabled]="order.status === 'archive'">
+      <mat-icon>edit</mat-icon>
+    </button>
+
+      </td>
+    </ng-container>
+    
+  
+    
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row 
+      *matRowDef="let row; columns: displayedColumns;" 
+      [class.archive-row]="row.status === 'archive'"
+      (click)="onRowClick($event, row)">
+    </tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
+
+
+<div *ngIf="isLoading" class="spinner-container">
+  <mat-spinner></mat-spinner>
+</div>

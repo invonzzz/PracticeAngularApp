@@ -1,0 +1,17 @@
+stages:
+  - build
+
+cache:
+  paths:
+    - node_modules/
+
+build-angular:
+  image: node:20
+  stage: build
+  script:
+    - npm install -g @angular/cli@latest
+    - npm install
+    - ng build --configuration production
+  artifacts:
+    paths:
+      - dist/orders-app/
